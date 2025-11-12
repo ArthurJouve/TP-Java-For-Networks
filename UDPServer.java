@@ -1,109 +1,124 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * UDP server that receives datagrams from clients and displays messages in the terminal (UTF-8 encoded strings up to 1024 bytes).
+ * 
+ * @author Your Name
+ * @version 1.0
+ */
 public class UDPServer {
-
-    // Constants
-    private static final int DEFAULT_PORT = 7565;     // pick any free port by default
-    private static final int MAX_BYTES = 1024;        // max accepted UTF-8 bytes
-
-    // State
-    private final int port;
-    private DatagramSocket socket;
-    private boolean running = false;
-
-    // Default constructor
+    
+    /** Default listening port for the server */
+    private static final int DEFAULT_PORT = 7565;
+    
+    /** Maximum size in bytes for received messages */
+    private static final int MAX_BYTES = 1024;
+    
+    /** The port number on which the server listens */
+    private int port;
+    
+    /** Indicates whether the server is currently running */
+    private boolean running;
+    
+    /**
+     * Constructs a UDPServer with the default port.
+     * The server is initially not running.
+     */
     public UDPServer() {
         this(DEFAULT_PORT);
     }
-
-    // Constructor with explicit port
+    
+    /**
+     * Constructs a UDPServer with a specified port.
+     * The server is initially not running.
+     * 
+     * @param port the port number on which the server will listen
+     */
     public UDPServer(int port) {
         this.port = port;
+        this.running = false;
     }
-
-    // Starts the server (no threads yet)
+    
+    /**
+     * Starts the UDP server and begins listening for incoming datagrams.
+     * 
+     * The server runs in an infinite loop, receiving datagrams from clients,
+     * decoding them as UTF-8 strings (truncated to MAX_BYTES if necessary),
+     * and displaying them on standard output prefixed with the client's address.
+     * 
+     * This method blocks indefinitely until an error occurs.
+     */
     public void launch() {
         try {
-            socket = new DatagramSocket(new InetSocketAddress(port));
+            // Create UDP socket
+            DatagramSocket socket = new DatagramSocket(port);
             running = true;
-            System.out.println("[INFO] UDPServer listening on port " + port);
-
-            // We’ll use a buffer large enough for typical UDP payloads, then truncate ourselves.
-            // 2048 gives us room to detect and cut down to 1024 safely.
-            byte[] recvBuf = new byte[2048];
-
-            // UTF-8 decoder that ignores malformed/truncated sequences at the end when we cut to 1024
-            CharsetDecoder decoder = StandardCharsets.UTF_8
-                    .newDecoder()
-                    .onMalformedInput(CodingErrorAction.IGNORE)
-                    .onUnmappableCharacter(CodingErrorAction.IGNORE);
-
+            System.out.println("UDP Server started on port " + port);
+            System.out.println(this); // Display state after starting
+            
+            // Buffer to receive incoming data
+            byte[] buffer = new byte[MAX_BYTES];
+            
             while (true) {
-                DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-                socket.receive(packet); // blocks until a datagram arrives
-
-                // Actual bytes received in this packet
-                int receivedLen = packet.getLength();
-
-                // Truncate to MAX_BYTES if needed
-                int toDecode = Math.min(receivedLen, MAX_BYTES);
-
-                // Decode only the first 'toDecode' bytes as UTF-8
-                decoder.reset();
-                ByteBuffer byteSlice = ByteBuffer.wrap(packet.getData(), 0, toDecode);
-                String message = decoder.decode(byteSlice).toString();
-
-                String client = packet.getAddress().getHostAddress() + ":" + packet.getPort();
-                System.out.println(client + " -> " + message);
+                // Create a packet to receive data
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                
+                // Receive the packet (blocking)
+                socket.receive(packet);
+                
+                // Get the actual length of received data
+                int length = Math.min(packet.getLength(), MAX_BYTES);
+                
+                // Decode the message in UTF-8
+                String message = new String(packet.getData(), 0, length, "UTF-8");
+                
+                // Display the client address and message
+                String clientAddress = packet.getAddress().getHostAddress() + ":" + packet.getPort();
+                System.out.println(clientAddress + " -> " + message);
+                
+                // Reset the buffer for next reception
+                buffer = new byte[MAX_BYTES];
             }
-
-        } catch (SocketException se) {
-            System.err.println("[ERROR] Could not open socket on port " + port + ": " + se.getMessage());
-        } catch (IOException ioe) {
-            System.err.println("[ERROR] I/O error: " + ioe.getMessage());
-        } finally {
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
-            }
-            running = false;
-        }
+            
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        } 
     }
-
-    // A description of the server’s state
+    
+    /**
+     * Returns a string representation of the server's state.
+     * 
+     * @return a string describing the server's port and running status
+     */
     @Override
     public String toString() {
         return "UDPServer{port=" + port + ", running=" + running + "}";
     }
-
-    // Entry point: java UDPServer 8080
+    
+    /**
+     * Main method to start the UDP server.
+     * 
+     * Accepts an optional port number as the first command-line argument.
+     * If no port is provided or if the port is invalid, the default port is used.
+     * 
+     * @param args command-line arguments; args[0] can specify the port number
+     */
     public static void main(String[] args) {
         int port = DEFAULT_PORT;
-
-        // Parse optional port from args[0]
-        if (args != null && args.length > 0) {
+        
+        // Check arg[0] port number
+        if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
-                if (port < 1 || port > 65535) {
-                    System.err.println("[WARN] Invalid port. Using default: " + DEFAULT_PORT);
-                    port = DEFAULT_PORT;
-                }
-            } catch (NumberFormatException nfe) {
-                System.err.println("[WARN] Could not parse port. Using default: " + DEFAULT_PORT);
-                port = DEFAULT_PORT;
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid port --> default port used: " + DEFAULT_PORT);
             }
         }
-
+        
         UDPServer server = new UDPServer(port);
-        System.out.println(server.toString());
-        server.launch(); // blocking loop
+        System.out.println(server); // Display state before starting
+        server.launch();
     }
 }
