@@ -5,22 +5,50 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-
+/**
+ * A UDP client that reads text lines from standard input and sends them as datagrams to a specified server.
+ * 
+ * Each message is prefixed with a sequence number to track the order of
+ * messages sent. Messages are encoded in UTF-8 and truncated to 1024 bytes if necessary.
+ * 
+ * @author Arthur Jouve & Ewan Zahra Thenault
+ * @version 1.0
+ */
 public class UDPClient {
     
+    /** Maximum size in bytes for messages to be sent */
     private static final int MAX_BYTES = 1024;
     
+    /** Hostname or IP address of the server */
     private String host;
-    private int port;
-     private int sequenceNumber;
     
-    // Constructor with host and port
+    /** Listening port number */
+    private int port;
+    
+    /** Sequence number for tracking messages sent */
+    private int sequenceNumber;
+    
+    /**
+     * Constructs a UDPClient with a specified host and port. Sequence number is initialized to 0.
+     * 
+     * @param host the hostname or IP address of the server
+     * @param port the port number on which the server is listening
+     */
     public UDPClient(String host, int port) {
         this.host = host;
         this.port = port;
         this.sequenceNumber = 0;
     }
     
+    /**
+     * Starts the UDP client and begins reading messages.
+     * 
+     * The client runs in an infinite loop, reading lines from the keyboard, adding a sequence number to each message, encoding it in UTF-8,
+     * (truncating it if necessary), and sending it as a UDP datagram to the server.
+     * 
+     * The sequence number is incremented after each message is sent.
+     * This method blocks indefinitely until an error occurs.
+     */
     public void launch() {
         try {
             // Create UDP socket
@@ -38,8 +66,7 @@ public class UDPClient {
                 // Add sequence number to message
                 String messageWithSeq = "[" + sequenceNumber + "] " + message;
                 sequenceNumber++;
-                
-                // Convert to UTF-8 bytes
+
                 byte[] data = messageWithSeq.getBytes("UTF-8");
                 
                 // Truncate if exceeds 1024 bytes
@@ -52,6 +79,7 @@ public class UDPClient {
                 // Create and send the packet
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
                 socket.send(packet);
+                socket.close();
             }
             
         } catch (IOException e) {
@@ -59,11 +87,24 @@ public class UDPClient {
         }
     }
     
+    /**
+     * Returns a string representation of the client's configuration.
+     * 
+     * @return a string describing the client's host and port
+     */
     @Override
     public String toString() {
         return "UDPClient{host='" + host + "', port=" + port + "}";
     }
     
+    /**
+     * Main method to start the UDP client.
+     * 
+     * Requires two command-line arguments: the server's hostname (or IP address)
+     * and the port number.
+     * 
+     * @param args command-line arguments: args[0] is the host, args[1] is the port
+     */
     public static void main(String[] args) {
         if (args.length != 2) {
             System.err.println("Usage: java UDPClient <host> <port>");

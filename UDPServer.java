@@ -5,26 +5,25 @@ import java.net.DatagramSocket;
 /**
  * UDP server that receives datagrams from clients and displays messages in the terminal (UTF-8 encoded strings up to 1024 bytes).
  * 
- * @author Your Name
+ * @author Arthur Jouve & Ewan Zahra Thenault
  * @version 1.0
  */
 public class UDPServer {
     
-    /** Default listening port for the server */
+    /** Default listening port */
     private static final int DEFAULT_PORT = 7565;
     
-    /** Maximum size in bytes for received messages */
+    /** Maximum size for received messages */
     private static final int MAX_BYTES = 1024;
     
-    /** The port number on which the server listens */
+    /** Listening port number */
     private int port;
-    
-    /** Indicates whether the server is currently running */
+    /** Status of the server (running or not) */
     private boolean running;
     
     /**
      * Constructs a UDPServer with the default port.
-     * The server is initially not running.
+     * Initial state of the server : not running.
      */
     public UDPServer() {
         this(DEFAULT_PORT);
@@ -32,9 +31,9 @@ public class UDPServer {
     
     /**
      * Constructs a UDPServer with a specified port.
-     * The server is initially not running.
+     * Initial state of the server : not running.
      * 
-     * @param port the port number on which the server will listen
+     * @param port port number to listen on
      */
     public UDPServer(int port) {
         this.port = port;
@@ -42,11 +41,10 @@ public class UDPServer {
     }
     
     /**
-     * Starts the UDP server and begins listening for incoming datagrams.
+     * Starts UDP server and listen for incoming datagrams.
      * 
-     * The server runs in an infinite loop, receiving datagrams from clients,
-     * decoding them as UTF-8 strings (truncated to MAX_BYTES if necessary),
-     * and displaying them on standard output prefixed with the client's address.
+     * Runs in an infinite loop, receiving datagrams from clients, decoding them as UTF-8 strings, 
+     * and displaying them on standard output.
      * 
      * This method blocks indefinitely until an error occurs.
      */
@@ -56,35 +54,35 @@ public class UDPServer {
             DatagramSocket socket = new DatagramSocket(port);
             running = true;
             System.out.println("UDP Server started on port " + port);
-            System.out.println(this); // Display state after starting
+            System.out.println(this);// Display state after starting
             
-            // Buffer to receive incoming data
+            // Buffer for incoming data
             byte[] buffer = new byte[MAX_BYTES];
             
             while (true) {
-                // Create a packet to receive data
+                // Packet to receive data
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                
-                // Receive the packet (blocking)
                 socket.receive(packet);
                 
-                // Get the actual length of received data
+                // Length of received data
                 int length = Math.min(packet.getLength(), MAX_BYTES);
                 
-                // Decode the message in UTF-8
+                // UTF-8 decoding
                 String message = new String(packet.getData(), 0, length, "UTF-8");
                 
                 // Display the client address and message
                 String clientAddress = packet.getAddress().getHostAddress() + ":" + packet.getPort();
                 System.out.println(clientAddress + " -> " + message);
                 
-                // Reset the buffer for next reception
+                // Reset the buffer
                 buffer = new byte[MAX_BYTES];
+                socket.close();
             }
             
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         } 
+        
     }
     
     /**
@@ -98,10 +96,9 @@ public class UDPServer {
     }
     
     /**
-     * Main method to start the UDP server.
+     * Main method
      * 
-     * Accepts an optional port number as the first command-line argument.
-     * If no port is provided or if the port is invalid, the default port is used.
+     * Accepts an optional port number as the first command-line argument arg[0] (if no port provided, uses default port).
      * 
      * @param args command-line arguments; args[0] can specify the port number
      */
