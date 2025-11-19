@@ -27,6 +27,21 @@ Sending “hello du client” through a pipe with the netcat command(with -u fur
 <img width="826" height="56" alt="image" src="https://github.com/user-attachments/assets/d4c7501b-af3b-4b48-b82f-57f89c7055d8" />
 
 
+TCP 
+
+<img width="496" height="86" alt="Capture d’écran 2025-11-19 à 14 26 44" src="https://github.com/user-attachments/assets/4b89c215-441f-41be-b89e-61808ade5f1e" />
+
+
+
+<img width="492" height="61" alt="Capture d’écran 2025-11-19 à 14 27 31" src="https://github.com/user-attachments/assets/e61b0159-3588-479e-830c-583fca4c5ed3" />
+
+
+
+
+
+
+
+
 
 1.2 UDP Client
 
