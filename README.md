@@ -31,6 +31,8 @@ Sending “hello du client” through a pipe with the netcat command(with -u fur
 
 <img width="825" height="113" alt="image" src="https://github.com/user-attachments/assets/4cd8c64d-cb3c-426a-8601-be5111f47ee7" />
 
+On the server side:
+
 <img width="823" height="87" alt="image" src="https://github.com/user-attachments/assets/72e0b59d-5890-4d0b-85e5-e7d02167d467" />
 
 
