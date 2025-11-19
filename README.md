@@ -37,12 +37,18 @@ Sending “hello du client” through a pipe with the netcat command(with -u fur
 2 – CReating a TCP Client-Server
 
 2.1 TCP Server
+
 <img width="496" height="86" alt="Capture d’écran 2025-11-19 à 14 26 44" src="https://github.com/user-attachments/assets/4b89c215-441f-41be-b89e-61808ade5f1e" />
 
 <img width="492" height="61" alt="Capture d’écran 2025-11-19 à 14 27 31" src="https://github.com/user-attachments/assets/e61b0159-3588-479e-830c-583fca4c5ed3" />
 
 2.2 TCP Client
 
+
+When the TCPclient sends a messages, the server receives it and answer the adress of the client and its message:
+
 <img width="1107" height="236" alt="image" src="https://github.com/user-attachments/assets/045d6596-35fd-45b3-aabc-6f9234ca634f" />
 
 <img width="521" height="95" alt="image" src="https://github.com/user-attachments/assets/dd3ef3c5-765e-48a2-9185-ab788b32c9b7" />
+
+
