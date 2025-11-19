@@ -48,23 +48,25 @@ On the server side:
 
 
 On each one of these pictures, we find on the left the client and on the right the server.
-
+We can can open the server and the client to communicate and send several messages:
 
 <img width="1298" height="114" alt="Capture d’écran 2025-11-19 à 16 09 32" src="https://github.com/user-attachments/assets/1fa8e4e3-6ee0-491d-9ad2-82918e84b63b" />
 
-
+The server deals properly with special caracters: 
 
 <img width="1298" height="60" alt="Capture d’écran 2025-11-19 à 16 11 09" src="https://github.com/user-attachments/assets/b4be2869-1d17-45a0-80a2-27dc6fee1af2" />
 
-
+The server deals properly with long messages: 
 
 <img width="1298" height="169" alt="Capture d’écran 2025-11-19 à 16 12 03" src="https://github.com/user-attachments/assets/f9c16bf2-9420-4e43-a815-0ad5ba48446f" />
 
-
+If the client tries to conect itself to the server on an other port than the server one, the connection is beeing refused.
 
 <img width="565" height="197" alt="Capture d’écran 2025-11-19 à 16 12 54" src="https://github.com/user-attachments/assets/f89691c4-58fa-4908-940b-6cf8b9cabaa1" />
 
+Here we can see the proper handling of the ressources by the server:
 
+<img width="1126" height="262" alt="image" src="https://github.com/user-attachments/assets/ea133f03-5e08-4851-bdb7-096191b9e5f5" />
 
 
 
