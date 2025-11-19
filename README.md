@@ -51,6 +51,8 @@ When the TCPclient sends a messages, the server receives it and answer the adres
 
 <img width="1107" height="236" alt="image" src="https://github.com/user-attachments/assets/045d6596-35fd-45b3-aabc-6f9234ca634f" />
 
+On the server side:
+
 <img width="521" height="95" alt="image" src="https://github.com/user-attachments/assets/dd3ef3c5-765e-48a2-9185-ab788b32c9b7" />
 
 
