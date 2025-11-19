@@ -52,6 +52,7 @@ We can can open the server and the client to communicate and send several messag
 
 <img width="1298" height="114" alt="Capture d’écran 2025-11-19 à 16 09 32" src="https://github.com/user-attachments/assets/1fa8e4e3-6ee0-491d-9ad2-82918e84b63b" />
 
+When the client quits the connection, the server disconnects itself and closes itself.
 
 <img width="1296" height="88" alt="Capture d’écran 2025-11-19 à 16 29 47" src="https://github.com/user-attachments/assets/5aa0acf2-b71a-49e2-bb20-2798bdd639dd" />
 
