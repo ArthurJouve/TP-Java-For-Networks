@@ -27,24 +27,22 @@ Sending “hello du client” through a pipe with the netcat command(with -u fur
 <img width="826" height="56" alt="image" src="https://github.com/user-attachments/assets/d4c7501b-af3b-4b48-b82f-57f89c7055d8" />
 
 
-TCP 
-
-<img width="496" height="86" alt="Capture d’écran 2025-11-19 à 14 26 44" src="https://github.com/user-attachments/assets/4b89c215-441f-41be-b89e-61808ade5f1e" />
-
-
-
-<img width="492" height="61" alt="Capture d’écran 2025-11-19 à 14 27 31" src="https://github.com/user-attachments/assets/e61b0159-3588-479e-830c-583fca4c5ed3" />
-
-
-
-
-
-
-
-
-
 1.2 UDP Client
 
 <img width="825" height="113" alt="image" src="https://github.com/user-attachments/assets/4cd8c64d-cb3c-426a-8601-be5111f47ee7" />
 
 <img width="823" height="87" alt="image" src="https://github.com/user-attachments/assets/72e0b59d-5890-4d0b-85e5-e7d02167d467" />
+
+
+2 – CReating a TCP Client-Server
+
+2.1 TCP Server
+<img width="496" height="86" alt="Capture d’écran 2025-11-19 à 14 26 44" src="https://github.com/user-attachments/assets/4b89c215-441f-41be-b89e-61808ade5f1e" />
+
+<img width="492" height="61" alt="Capture d’écran 2025-11-19 à 14 27 31" src="https://github.com/user-attachments/assets/e61b0159-3588-479e-830c-583fca4c5ed3" />
+
+2.2 TCP Client
+
+<img width="1107" height="236" alt="image" src="https://github.com/user-attachments/assets/045d6596-35fd-45b3-aabc-6f9234ca634f" />
+
+<img width="521" height="95" alt="image" src="https://github.com/user-attachments/assets/dd3ef3c5-765e-48a2-9185-ab788b32c9b7" />
