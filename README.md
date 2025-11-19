@@ -47,22 +47,15 @@ On the server side:
 2.2 TCP Client
 
 
-When the TCPclient sends a messages, the server receives it and answer the adress of the client and its message:
-
-<img width="1107" height="236" alt="image" src="https://github.com/user-attachments/assets/045d6596-35fd-45b3-aabc-6f9234ca634f" />
-
-On the server side:
-
-<img width="521" height="95" alt="image" src="https://github.com/user-attachments/assets/dd3ef3c5-765e-48a2-9185-ab788b32c9b7" />
-
-
-
+On each one of these pictures, we find on the left the client and on the right the server.
 
 
 <img width="1298" height="114" alt="Capture d’écran 2025-11-19 à 16 09 32" src="https://github.com/user-attachments/assets/1fa8e4e3-6ee0-491d-9ad2-82918e84b63b" />
 
 
+
 <img width="1298" height="60" alt="Capture d’écran 2025-11-19 à 16 11 09" src="https://github.com/user-attachments/assets/b4be2869-1d17-45a0-80a2-27dc6fee1af2" />
+
 
 
 <img width="1298" height="169" alt="Capture d’écran 2025-11-19 à 16 12 03" src="https://github.com/user-attachments/assets/f9c16bf2-9420-4e43-a815-0ad5ba48446f" />
