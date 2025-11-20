@@ -1,6 +1,15 @@
 import java.net.*;
 import java.io.*;
+import java.io.IOException;
 
+/**
+ * A TCP client that reads text lines from standard input and sends them to a specified server.
+ * 
+ * Read the response from the server and prints it to the console (echoed messages).
+ * 
+ * @author Arthur Jouve & Ewan Zahra Thenault
+ * @version 1.0
+ */
 public class TCPClient {
     private String serverAddress;
     private int serverPort;
@@ -74,7 +83,7 @@ public class TCPClient {
 
     /**
      * Main method to run the TCPClient.
-     * @param args
+     * @param args arg[0] = server address, arg[1] = server port
      */
     public static void main(String[] args) {
         if (args.length < 2) {

@@ -1,7 +1,16 @@
 import java.net.*;
 import java.io.*;
+import java.io.IOException;
 
 
+/**
+ * A TCP server that accepts a single client connection, reads lines of text from the client,
+ * 
+ * prints them to the console, and sends an echo response back to the client.
+ * 
+ * @author Arthur Jouve & Ewan Zahra Thenault
+ * @version 1.0
+ */
 public class TCPServer {
     private int port;
     private static final int DEFAULT_PORT = 8006;
