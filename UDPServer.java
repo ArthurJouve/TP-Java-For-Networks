@@ -49,9 +49,10 @@ public class UDPServer {
      * This method blocks indefinitely until an error occurs.
      */
     public void launch() {
+        DatagramSocket socket = null;
         try {
             // Create UDP socket
-            DatagramSocket socket = new DatagramSocket(port);
+            socket = new DatagramSocket(port);
             running = true;
             System.out.println("UDP Server started on port " + port);
             System.out.println(this);// Display state after starting
@@ -76,12 +77,17 @@ public class UDPServer {
                 
                 // Reset the buffer
                 buffer = new byte[MAX_BYTES];
-                socket.close();
+
             }
             
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
-        } 
+        } finally {
+        if (socket != null && !socket.isClosed()) {
+            socket.close(); 
+            running = false;
+        }
+    }
         
     }
     

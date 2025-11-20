@@ -50,9 +50,10 @@ public class UDPClient {
      * This method blocks indefinitely until an error occurs.
      */
     public void launch() {
+        DatagramSocket socket = null;
         try {
             // Create UDP socket
-            DatagramSocket socket = new DatagramSocket();
+            socket = new DatagramSocket();
             InetAddress address = InetAddress.getByName(host);
             
             // Read from keyboard
@@ -79,14 +80,17 @@ public class UDPClient {
                 // Create and send the packet
                 DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
                 socket.send(packet);
-                socket.close();
+                
             }
             
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
+        } finally {
+            if (socket != null && !socket.isClosed()) {
+                socket.close(); 
         }
     }
-    
+}
     /**
      * Returns a string representation of the client's configuration.
      * 
