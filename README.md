@@ -390,6 +390,6 @@ We can see that with a single client the connection is properly handle by the se
 
 6.1.2 Robustness Testing
 
-As we can see on the following screen, rapid consecutive connections is not a problem for the server.
+As we can see on the following screen, rapid consecutive connections is not a problem to connect to the server but we can't communicate any further after the connections.
 <img width="2525" height="1071" alt="image" src="https://github.com/user-attachments/assets/bc4f740e-5570-4d75-8a93-37f369d0e344" />
 
