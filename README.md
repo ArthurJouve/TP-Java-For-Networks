@@ -326,11 +326,22 @@ Using the guide for the TP, we are able to :
 
 ## Testing & Results
 
+4.1.3 Success Verification
 
+<img width="2513" height="450" alt="image" src="https://github.com/user-attachments/assets/cee9145f-6911-45a1-b741-5dee951bce3e" />
+We can see that a single client connects and communicates normally, the server shows connection message with correct client ID, client receives welcome message with assigned ID and echo functionality works as expected.
+Finally "quit" command disconnects client cleanly: 
+<img width="1535" height="55" alt="image" src="https://github.com/user-attachments/assets/727de1cf-5b15-4ec2-9578-98bb22aa7cc9" />
 
+4.2 Exercise 2: Concurrent Client Testing
+4.2.1 Testing Procedure
 
-
-
+As we can see on this screen, several clients receive independant and correctly separated communications.
+<img width="2550" height="1026" alt="image" src="https://github.com/user-attachments/assets/f4c0493d-b4de-4908-bdc1-d43caf9869bb" />
+Messages from one client don’t block others.
+Each client receives only their own echoes with correct client ID.
+Server console shows messages from all clients interleaved.
+Active thread count increases with each new connection:
 
 
 
