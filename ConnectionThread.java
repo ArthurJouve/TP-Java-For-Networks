@@ -39,6 +39,7 @@ public class ConnectionThread extends Thread {
         PrintWriter writer = null;
         
         try {
+            
             // Set up input/output streams
             InputStream inputStream = clientSocket.getInputStream();
             reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
