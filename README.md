@@ -328,6 +328,7 @@ Using the guide for the TP, we are able to :
 
 4.1.3 Success Verification
 
+Basic success:
 <img width="2513" height="450" alt="image" src="https://github.com/user-attachments/assets/cee9145f-6911-45a1-b741-5dee951bce3e" />
 We can see that a single client connects and communicates normally, the server shows connection message with correct client ID, client receives welcome message with assigned ID and echo functionality works as expected.
 Finally "quit" command disconnects client cleanly: 
@@ -341,7 +342,7 @@ As we can see on this screen, several clients receive independant and correctly 
 Messages from one client don’t block others.
 Each client receives only their own echoes with correct client ID.
 Server console shows messages from all clients interleaved.
-Active thread count increases with each new connection:
+Active thread count increases with each new connection.
 
 
 
