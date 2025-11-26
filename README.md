@@ -381,12 +381,12 @@ The idea is now to create a Thread Pool Solution.
 
 ## Testing and validation
 
-Basic Operation (Single Client Full Lifecycle)
-
 
 <img width="1131" height="156" alt="Capture d’écran 2025-11-26 à 16 05 44" src="https://github.com/user-attachments/assets/a78b5d3d-e4b8-47b7-b71b-55ac1b2c6f8f" />
 
 We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side. If we attempt to reconnect with the same client, it will have a different ID on the server side. 
+
+The tests have been made for several clients and the server replies well to each client. Other clients cannot see the messages. 
 
 6.1.2 Robustness Testing
 
