@@ -321,16 +321,17 @@ Using the guide for the TP, we are able to :
 
 
 
-
-
-
 ## Testing & Results
 
 4.1.3 Success Verification
 
 Basic success:
 <img width="2513" height="450" alt="image" src="https://github.com/user-attachments/assets/cee9145f-6911-45a1-b741-5dee951bce3e" />
+
+
 We can see that a single client connects and communicates normally, the server shows connection message with correct client ID, client receives welcome message with assigned ID and echo functionality works as expected.
+
+
 Finally "quit" command disconnects client cleanly: 
 <img width="1535" height="55" alt="image" src="https://github.com/user-attachments/assets/727de1cf-5b15-4ec2-9578-98bb22aa7cc9" />
 
@@ -344,5 +345,40 @@ Each client receives only their own echoes with correct client ID.
 Server console shows messages from all clients interleaved.
 Active thread count increases with each new connection.
 
+
+4.3 Exercise 3: Thread Safety Validation
+4.3.1 Race Condition Test
+
+If we start a loop to create several clients (in one terminal), we can see that all clients are receiving a unique sequential ID (here 10 clients).
+
+￼<img width="181" height="157" alt="9976 9977" src="https://github.com/user-attachments/assets/9f8afcdb-495c-4e8a-bc3d-5f6cd7f255f9" />
+
+
+On the server side, it received all connections separately and there is no duplicate client ID in the logs.
+
+
+￼
+<img width="502" height="290" alt="Active threads 1" src="https://github.com/user-attachments/assets/fa804abf-3f97-495d-a9d8-cf8c95312167" />
+
+
+When trying to run the command to make 50 connections to the server, none of the connections failed (Active threads : 50).
+
+￼<img width="479" height="156" alt="client 45 connected from 127 0 0 1" src="https://github.com/user-attachments/assets/19f72e86-1e97-4719-aae4-d3354abaaaf0" />
+
+
+Finally by using a pipe with a test message to be sent, it terminates the client. Thus we can see that all threads on server side are properly disconnected.
+
+￼<img width="479" height="418" alt="152742" src="https://github.com/user-attachments/assets/81a7a0e2-5d67-4b51-9f1d-5a9fbca38672" />
+
+
+## Thread Pool Solution
+
+The idea is now to create a Thread Pool Solution.
+
+
+
+
+
+## Testing and validation
 
 
