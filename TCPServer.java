@@ -45,7 +45,7 @@ public class TCPServer {
             // Accept new client connection
             Socket clientSocket = serverSocket.accept();
             
-            // Generate unique client ID (thread-safe)
+            // Generate unique client ID
             int clientId = clientCounter.incrementAndGet();
             
             // Create and start a new thread for this client

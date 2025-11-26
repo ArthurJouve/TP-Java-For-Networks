@@ -19,6 +19,7 @@ public class ThreadPoolTCPServer {
     private ExecutorService threadPool;
     private ServerSocket serverSocket;
     private static AtomicInteger clientCounter = new AtomicInteger(0);
+    private static AtomicInteger activeClients = new AtomicInteger(0);
     private volatile boolean running = true;
     
     /**
@@ -38,7 +39,8 @@ public class ThreadPoolTCPServer {
     }
     
     /**
-     * Launches the thread pool TCP server. Accepts client connections and submits them to the thread pool.
+     * Launches the thread pool TCP server.
+     * Accepts client connections and submits them to the thread pool.
      * 
      * @throws IOException if an I/O error occurs
      */
@@ -50,7 +52,6 @@ public class ThreadPoolTCPServer {
         
         while (running) {
             try {
-
                 // Accept new client connection
                 Socket clientSocket = serverSocket.accept();
                 
@@ -59,9 +60,17 @@ public class ThreadPoolTCPServer {
                 
                 System.out.println("[CONNECTION] Client " + clientId + " from " + clientSocket.getInetAddress());
                 
-                // Submit task to thread pool instead of creating new thread
+                // Increment active clients counter
+                activeClients.incrementAndGet();
+                
+                // Submit task to thread pool
                 threadPool.execute(() -> {
-                    handleClient(clientSocket, clientId);
+                    try {
+                        handleClient(clientSocket, clientId);
+                    } finally {
+                        // Decrement counter when client handler finishes
+                        activeClients.decrementAndGet();
+                    }
                 });
                 
                 // Display pool statistics
@@ -126,16 +135,18 @@ public class ThreadPoolTCPServer {
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024;
         
-
-        System.out.println("Active threads: " + Thread.activeCount());
+        System.out.println("=== Thread Pool Statistics ===");
+        System.out.println("Active clients: " + activeClients.get());
+        System.out.println("Total threads: " + Thread.activeCount());
         System.out.println("Memory usage: " + usedMemory + " KB");
+        System.out.println("===============================");
     }
     
     /**
      * Gracefully shuts down the server and thread pool.
      */
     public void shutdown() {
-        System.out.println("Initiating server shutdown");
+        System.out.println("Initiating server shutdown...");
         running = false;
         
         // Close server socket
