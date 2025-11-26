@@ -1,6 +1,5 @@
 import java.net.*;
 import java.io.*;
-import java.io.IOException;
 
 /**
  * A TCP client that reads text lines from standard input and sends them to a specified server.
@@ -52,6 +51,12 @@ public class TCPClient {
         }
         
         String line;
+
+        // Read and print the welcome message from the server
+        String welcomeMessage = reader.readLine();
+        if (welcomeMessage != null) {
+            System.out.println(welcomeMessage);
+        }
         
         // Read lines from the console, send to server, and print server responses (exept if CTRL+D is pressed)
         while ((line = console.readLine()) != null) {

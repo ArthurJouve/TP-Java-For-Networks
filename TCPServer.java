@@ -1,12 +1,10 @@
 import java.net.*;
 import java.io.*;
-import java.io.IOException;
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A TCP server that accepts a single client connection, reads lines of text from the client,
- * 
- * prints them to the console, and sends an echo response back to the client.
+ * Multithreaded TCP server that accepts multiple client connections concurrently.
+ * Each client is handled in a separate thread for independent communication.
  * 
  * @author Arthur Jouve & Ewan Zahra Thenault
  * @version 1.0
@@ -15,6 +13,7 @@ public class TCPServer {
     private int port;
     private static final int DEFAULT_PORT = 8006;
     private ServerSocket serverSocket;
+    private static AtomicInteger clientCounter = new AtomicInteger(0);
     
     /**
      * Constructs a TCPServer that listens on the specified port.
@@ -25,50 +24,37 @@ public class TCPServer {
     }
     
     /**
-     * Constructs a TCPServer that listens on the default port (here 8006).
+     * Constructs a TCPServer that listens on the default port.
      */
     public TCPServer() {
         this(DEFAULT_PORT);
     }
     
-    
     /**
-     * Launches the TCP server to accept a single client connection, read lines of text from the client,
-     * print them to the console, and send an echo response back to the client.
-     * @throws IOException
+     * Launches the multithreaded TCP server.
+     * Accepts multiple client connections and creates a thread for each.
+     * 
+     * @throws IOException if an I/O error occurs
      */
     public void launch() throws IOException {
-        // Créer une instance de ServerSocket
         serverSocket = new ServerSocket(port);
-        System.out.println("TCP Server started on port " + port);
+        System.out.println("Multithreaded TCP Server started on port " + port);
+        System.out.println("Waiting for connections...");
         
-        // Wait for connection request
-        System.out.println("Waiting for connection...");
-        Socket socket = serverSocket.accept();
-        
-        // Accept the connection and get address of client
-        System.out.println("[CONNECTION] " + socket.getInetAddress());
-        
-        // Get input stream from the socket
-        InputStream inputStream = socket.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        
-        // Get output stream for responses
-        OutputStream outputStream = socket.getOutputStream();
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
-        
-        // Read lines from the client until disconnection
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println("[RECEIVED] from " + socket.getInetAddress() + " : " + line);
+        while (true) {
+            // Accept new client connection
+            Socket clientSocket = serverSocket.accept();
             
-            // Awnser (echo the client) with its address and the same line
-            writer.println("[ECHO] to " + socket.getInetAddress() + " : " + line);
+            // Generate unique client ID (thread-safe)
+            int clientId = clientCounter.incrementAndGet();
+            
+            // Create and start a new thread for this client
+            ConnectionThread clientThread = new ConnectionThread(clientSocket, clientId);
+            clientThread.start();
+            
+            // Display active thread count
+            System.out.println("Active threads: " + (Thread.activeCount() - 1));
         }
-        
-        System.out.println("[DISCONNECTION] " + socket.getInetAddress());
-        socket.close();
-        serverSocket.close();
     }
     
     /**
@@ -81,9 +67,6 @@ public class TCPServer {
     
     /**
      * Main method to start the TCP server.
-     * 
-     * Optionally takes a command-line argument for the port number.
-     * If no argument is provided, the default port is used.
      * 
      * @param args command-line arguments: args[0] is the optional port number
      */
