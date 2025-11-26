@@ -311,4 +311,26 @@ Since the server accepts only one client at a time, if we try to connect two cli
 
 The server's CPU utilization is low during I/O waits since both accept() and client input reads are blocking functions. CPU usage spikes only when data is available and processing occurs.
 
+### Multithread implementation
+
+Using the guide for the TP, we are able to : 
+
+- Create a ConnectionThread.java file with proper constructor and run() method
+- Move the Session 3 client handling logic into the run() method
+- Modify the main server to use threads instead of direct method calls
+
+
+
+
+
+
+## Testing & Results
+
+
+
+
+
+
+
+
 
