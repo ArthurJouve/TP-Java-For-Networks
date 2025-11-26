@@ -389,6 +389,7 @@ Basic Operation (Single Client Full Lifecycle)
 We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side. If we attempt to reconnect with the same client, it will have a different ID on the server side. 
 
 6.1.2 Robustness Testing
+
 As we can see on the following screen, rapid consecutive connections is not a problem for the server.
 <img width="2525" height="1071" alt="image" src="https://github.com/user-attachments/assets/bc4f740e-5570-4d75-8a93-37f369d0e344" />
 
