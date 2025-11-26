@@ -285,9 +285,30 @@ Using `netstat`, we verified proper resource management (before the server start
 ---
 
 
-## Further Improvements
+## Multithreaded architecture
 
-To be done on next sessions.
+The idea is now to transform the single-threaded TCP server into a multithreaded architecturecapable of handling multiple clients concurrently. 
 
+**Single-threaded Limitations Analysis**
+
+If we have a review to the previous TCP server file :
+
+
+**- Where does serverSocket.accept() block?**
+
+The method serverSocket.accept() blocks on the main thread, when the server waits for an incoming client connection. It waits indefinitely until a client connects.
+
+**- How does your handleClient() method prevent new connections?**
+
+In the single connection design, the handleClient() method processes the connected client synchronously on the main thread. During this client handling, the server does not accept new incoming connections. So, the server is "blocked" servicing a single client.
+
+**- What happens when multiple clients try to connect simultaneously?**
+
+Since the server accepts only one client at a time, if we try to connect two clients to the server, the second client wait undefinitely to send its message.
+
+
+**- How is CPU utilization during I/O waits?**
+
+The server's CPU utilization is low during I/O waits since both accept() and client input reads are blocking functions. CPU usage spikes only when data is available and processing occurs.
 
 
