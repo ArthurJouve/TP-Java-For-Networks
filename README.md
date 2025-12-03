@@ -472,7 +472,50 @@ This time, we are going to implement the SSL Server. Using what was previously d
 # 3 Custom Protocol Design
 ## 3.1 Exercise 4: Chat Protocol Specification
 
+Here is the full protocol following your hybrid design:
+Fixed‑size binary header + JSON body + length‑prefixed framing
++-------------------+--------------------------+
+|  Header (12 bytes)|  Body JSON (variable)    |
++-------------------+--------------------------+
+Message Header Format (12 bytes)
 
+
+
+Field
+Size
+Type
+Description
+
+
+
+version
+1 byte
+uint8
+Protocol version (e.g., 1)
+
+
+type
+1 byte
+uint8
+Message type (enum)
+
+
+flags
+2 bytes
+uint16
+Options (compression, priority…)
+
+
+body_length
+4 bytes
+uint32
+Length of the JSON body
+
+
+reserved
+4 bytes
+uint32
+Padding / future extension
 
 
 
