@@ -508,33 +508,37 @@ As the client can't locate the certificate, the server reject the certificate :
 
 
 
-
-# 3 Custom Protocol Design
-## 3.1 Exercise 4: Chat Protocol Specification
-
-Here is the full protocol following your hybrid design:
-Fixed‑size binary header + JSON body + length‑prefixed framing
+## Exercise 5: Protocol Message Design
 
 
-+-------------------+--------------------------+
+We first defined the message type in a dedicated file : 
 
-|  Header (12 bytes)|  Body JSON (variable)    |
+<img width="341" height="168" alt="Capture d’écran 2025-12-03 à 16 45 12" src="https://github.com/user-attachments/assets/f3fbbe25-4558-40b2-b0af-d846b78bd2c2" />
 
-+-------------------+--------------------------+
 
-Message Header Format (12 bytes)
+Then we create a ChatMessage class with:
+• Message type identifier
+• Protocol version
+• Timestamp
+• Sender identifier
+• Recipient information (for private messages)
+• Message content
+• Room identifier (for room-based messages)
 
-The message header is a fixed-size binary structure of 12 bytes. It contains the following fields, in order:
+And add different methods to it : 
 
-version (1 byte, uint8)Indicates the protocol version used. For example, the value may be set to 1.
+- Serialization Method : Converts a ChatMessage object into a byte array for network transmission. The method transforms the complex object structure (with fields like sender, content, timestamp) into a compact binary format that combines a fixed-size binary header with a JSON body encoded in UTF-8. Format : Binary header (10 bytes) + JSON body (variable size). Header contains: version(1) + type(1) + length(4) + timestamp(4).
 
-type (1 byte, uint8)Identifies the type of the message. This corresponds to an enumeration defining actions such as login, logout, room messages, etc.
+- Deserialization Method : Reconstructs a ChatMessage object from a byte array received over the network. This is the reverse process of serialization—it parses the binary header to extract metadata (version, type, length, timestamp) and then decodes the JSON body to rebuild the original message object.
 
-flags (2 bytes, uint16)Optional flags used to indicate additional information about the message, such as compression, priority, or other protocol options.
+- Character Encoding : Handles UTF-8 encoding to ensure proper representation of characters and special symbols.
 
-body_length (4 bytes, uint32)Specifies the size of the JSON body in bytes. This field allows the receiver to know exactly how many bytes must be read after the header.
+- Message Validation : Adds checksums and length verification to detect corrupted or tampered messages. This includes validating that required fields are present, checking message size limits, verifying protocol versions match.
 
-reserved (4 bytes, uint32)A field reserved for future extensions. It may be used for alignment or for adding new metadata later without breaking compatibility.
+Everything is gathered in the ChatMessage class.
+
+
+
 
 
 
