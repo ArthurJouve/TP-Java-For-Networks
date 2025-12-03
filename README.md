@@ -317,7 +317,7 @@ Using the guide for the TP, we are able to :
 
 - Create a ConnectionThread.java file with proper constructor and run() method
 - Move the Session 3 client handling logic into the run() method
-- Modify the main server to use threads instead of direct method calls
+- Modify the main server to use threads instead of direct method calls (TCPServer file modified).
 
 
 
@@ -384,7 +384,7 @@ The idea is now to create a Thread Pool Solution.
 
 <img width="1131" height="156" alt="Capture d’écran 2025-11-26 à 16 05 44" src="https://github.com/user-attachments/assets/a78b5d3d-e4b8-47b7-b71b-55ac1b2c6f8f" />
 
-We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side. If we attempt to reconnect with the same client, it will have a different ID on the server side. 
+We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side. If we attempt to reconnect with the same client, it will have a different ID on the server side. The thread associate with the client is also cleaned up. 
 
 The tests have been made for several clients and the server replies well to each client. Other clients cannot see the messages. 
 
