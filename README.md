@@ -461,3 +461,17 @@ Two algorithms are implemented:
 
 Valid from: Wed Dec 03 13:51:05 CET 2025 until: Thu Dec 03 13:51:05 CET 2026
 
+## Task 1.1: Generate Self-Signed Certificate
+
+If we have a look at the following command : 
+
+```
+keytool -genkeypair -alias myserver -keyalg RSA -keysize 2048 -validity 365 -keystore server.tks
+```
+
+We can create a testing certificate using Java : 
+
+<img width="805" height="453" alt="Capture d’écran 2025-12-03 à 14 34 01" src="https://github.com/user-attachments/assets/2a2b62af-1c9a-4187-b4d5-7ae720b2c9a6" />
+
+
+
