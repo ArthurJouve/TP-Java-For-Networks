@@ -474,6 +474,7 @@ We can create a testing certificate using Java :
 <img width="805" height="453" alt="Capture d’écran 2025-12-03 à 14 34 01" src="https://github.com/user-attachments/assets/2a2b62af-1c9a-4187-b4d5-7ae720b2c9a6" />
 
 Here the certificate's owner name is localhost (Owner: CN=localhost, OU=Development, O=MyCompany, L=City, ST=State, C=FR) and it is issue by the same person (we did not changed the fields for the issuer).
+
 This key is generated using SHA384withRSA algorithm and the certificate expire on Thu Dec 03 14:30:46 CET 2026.
 
 
