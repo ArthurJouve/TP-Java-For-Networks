@@ -381,15 +381,44 @@ The idea is now to create a Thread Pool Solution.
 
 ## Testing and validation
 
+### Functionality Testing
 
 <img width="1131" height="156" alt="Capture d’écran 2025-11-26 à 16 05 44" src="https://github.com/user-attachments/assets/a78b5d3d-e4b8-47b7-b71b-55ac1b2c6f8f" />
 
-We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side. If we attempt to reconnect with the same client, it will have a different ID on the server side. The thread associate with the client is also cleaned up. 
+We can see that with a single client the connection is properly handle by the server. The client receives messages and if the client type "quit" it disconnect properly the client on the server side and does not crash. If we attempt to reconnect with the same client, it will have a different ID on the server side. The thread associate with the client is also cleaned up. 
 
 The tests have been made for several clients and the server replies well to each client. Other clients cannot see the messages. 
 
-6.1.2 Robustness Testing
+### Robustness Testing
+
+If we kill the client brutaly, the server handle perfectly the disconnection : 
+
+<img width="349" height="60" alt="Capture d’écran 2025-12-03 à 13 51 01" src="https://github.com/user-attachments/assets/ea9ec4c4-62aa-47b7-8fda-52f76ad9a720" />
 
 As we can see on the following screen, rapid consecutive connections is not a problem to connect to the server but we can't communicate any further after the connections.
 <img width="2525" height="1071" alt="image" src="https://github.com/user-attachments/assets/bc4f740e-5570-4d75-8a93-37f369d0e344" />
 
+If we have a look at the memory usage over time by using the monitoring implementation of the next part, we can see that for roughly 10 simulteous connections, the memory usage stabilise around 8500 kB. 
+
+<img width="243" height="70" alt="Capture d’écran 2025-12-03 à 13 53 53" src="https://github.com/user-attachments/assets/7c9ed3bb-671f-4ff5-b276-f384312bd7c4" />
+
+
+### Performance Metrics
+
+If we try to connect more than 10 clients at the same time, the pool does not accept other connections. New connections are put in a "waiting line" and are waiting for a disconnection. 
+
+On Client side : 
+
+<img width="280" height="69" alt="Capture d’écran 2025-12-03 à 14 06 02" src="https://github.com/user-attachments/assets/5a0af747-9f0c-4829-b632-a355b21e53a3" />
+
+
+
+# Secure Communication & Protocol Design
+
+
+
+On Server side : 
+
+<img width="356" height="185" alt="Capture d’écran 2025-12-03 à 14 07 02" src="https://github.com/user-attachments/assets/b15ef8c7-4bc2-4b28-97af-7552470efdce" />
+
+If we try to see the response time, even with lot of clients connected, the server replies the echo within milliseconds. 
