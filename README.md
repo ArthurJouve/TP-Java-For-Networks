@@ -437,7 +437,7 @@ network applications.
 
 2.1.2 Task 1.2: Understand Certificate Contents
 
-<img width="263" height="111" alt="image" src="https://github.com/user-attachments/assets/f1de63ef-1a75-4401-aa12-b6ba7b722039" />
+<img width="1263" height="1111" alt="image" src="https://github.com/user-attachments/assets/f1de63ef-1a75-4401-aa12-b6ba7b722039" />
 
 Analysis Questions:
 
