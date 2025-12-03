@@ -461,6 +461,14 @@ Two algorithms are implemented:
 
 Valid from: Wed Dec 03 13:51:05 CET 2025 until: Thu Dec 03 13:51:05 CET 2026
 
+## Exercise 2: SSL Server Implementation
+
+This time, we are going to implement the SSL Server. Using what was previously done with TCP, loading SSL certificate from keystore file and by listenning for incoming SSL connections on configurable port, we can create the can create SSLTCPServer class.
+
+
+
+
+
 # 3 Custom Protocol Design
 ## 3.1 Exercise 4: Chat Protocol Specification
 
