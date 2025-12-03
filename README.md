@@ -465,6 +465,46 @@ Valid from: Wed Dec 03 13:51:05 CET 2025 until: Thu Dec 03 13:51:05 CET 2026
 
 This time, we are going to implement the SSL Server. Using what was previously done with TCP, loading SSL certificate from keystore file and by listenning for incoming SSL connections on configurable port, we can create the can create SSLTCPServer class.
 
+If we start the SSL server on port 8443 and use OpenSSL command : 
+
+
+<img width="650" height="526" alt="Capture d’écran 2025-12-03 à 15 56 31" src="https://github.com/user-attachments/assets/1a566daa-2106-4a16-b7b5-e20b39522b06" />
+
+We can retrieve the certificate of the server (RSA encryption, the type of key...)
+
+<img width="828" height="162" alt="Capture d’écran 2025-12-03 à 16 05 17" src="https://github.com/user-attachments/assets/7d5b5915-64d8-46ad-8bad-0f8df74837ff" />
+
+Here we can also see that the handshake is successfull. 
+
+If we send a message to the server, it replies to us : 
+
+<img width="171" height="51" alt="Capture d’écran 2025-12-03 à 16 08 00" src="https://github.com/user-attachments/assets/04716c32-ee50-42e6-ad30-78c28e695eaa" />
+
+## Exercise 3: SSL Client Implementation
+
+This time, we are going to see the client side. The client needs to : 
+• Connects to SSL server with proper certificate validation
+• Supports both testing (trust all) and production modes (to accept self-signed certificates)
+• Implements secure message exchange
+• Handles SSL handshake errors appropriately
+
+
+If we try to connect to the server using the testing mode : 
+
+<img width="645" height="112" alt="Capture d’écran 2025-12-03 à 16 18 12" src="https://github.com/user-attachments/assets/99464569-0b8a-466e-a430-119f96ce1ef7" />
+
+And we can see that on the server side, it accept the connection and print the name of the SSL cipher suite which is used : 
+
+<img width="316" height="61" alt="Capture d’écran 2025-12-03 à 16 18 41" src="https://github.com/user-attachments/assets/97ab063f-c04b-45c0-87c6-b4e000b02d51" />
+
+
+By running it with the production mode (no self-signed certificate) : 
+
+<img width="856" height="85" alt="Capture d’écran 2025-12-03 à 16 15 01" src="https://github.com/user-attachments/assets/a503fb2e-7af4-4c9c-af09-6f52f84bc1d9" />
+
+As the client can't locate the certificate, the server reject the certificate :
+
+<img width="445" height="31" alt="Capture d’écran 2025-12-03 à 16 16 17" src="https://github.com/user-attachments/assets/c9771b45-eb63-419b-8c93-2f14f921d91a" />
 
 
 
