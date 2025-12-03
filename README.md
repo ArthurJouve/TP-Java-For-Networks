@@ -539,6 +539,8 @@ Everything is gathered in the ChatMessage class.
 
 
 
+## Exercise 6: Protocol Server Implementation
+
 
 
 
