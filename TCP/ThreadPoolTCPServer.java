@@ -132,13 +132,10 @@ public class ThreadPoolTCPServer {
      * Displays current thread pool statistics.
      */
     private void printThreadStats() {
-        Runtime runtime = Runtime.getRuntime();
-        long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024;
-        
-        System.out.println("=== Thread Pool Statistics ===");
-        System.out.println("Active clients: " + activeClients.get());
-        System.out.println("Total threads: " + Thread.activeCount());
-        System.out.println("Memory usage: " + usedMemory + " KB");
+        Runtime runtime = Runtime . getRuntime () ;
+        System . out . println ("=== Thread Statistics ===") ;
+        System . out . println (" Active threads : " + ( Thread . activeCount () - 1) ) ;
+        System . out . println (" Memory usage : " +( runtime . totalMemory () - runtime . freeMemory () ) / 1024 + " KB") ;
         System.out.println("===============================");
     }
     
