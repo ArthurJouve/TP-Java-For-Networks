@@ -135,7 +135,7 @@ public class SSLTCPServer {
     }
     
     /**
-     * Shuts down the server gracefully.
+     * Shuts down the server.
      */
     public void shutdown() {
         isRunning = false;
