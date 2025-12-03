@@ -461,6 +461,11 @@ Two algorithms are implemented:
 
 Valid from: Wed Dec 03 13:51:05 CET 2025 until: Thu Dec 03 13:51:05 CET 2026
 
+# 3 Custom Protocol Design
+## 3.1 Exercise 4: Chat Protocol Specification
+
+
+
 
 
 
