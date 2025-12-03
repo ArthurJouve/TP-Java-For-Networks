@@ -112,34 +112,57 @@ public class SSLClient {
     /**
      * Main method to test the SSL client.
      * 
-     * @param args [host] [port] [--test for testing mode]
+    * @param args [host] [port] [--test for testing mode]
      */
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Usage: java SSLClient <host> <port> [--test]");
-            System.exit(1);
+    if (args.length < 2) {
+        System.err.println("Usage: java SSLClient <host> <port> [--test]");
+        System.exit(1);
+    }
+    
+    try {
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+        boolean testMode = (args.length > 2 && args[2].equals("--test"));
+        
+        SSLClient client = new SSLClient(host, port, testMode);
+        client.connect();
+        
+        // Mode interactif
+        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader serverReader = new BufferedReader(
+            new InputStreamReader(client.socket.getInputStream(), "UTF-8"));
+        PrintWriter serverWriter = new PrintWriter(
+            new OutputStreamWriter(client.socket.getOutputStream(), "UTF-8"), true);
+        
+        // Lit le message de bienvenue
+        String welcome = serverReader.readLine();
+        if (welcome != null) {
+            System.out.println(welcome);
         }
         
-        try {
-            String host = args[0];
-            int port = Integer.parseInt(args[1]);
-            boolean testMode = (args.length > 2 && args[2].equals("--test"));
+        System.out.println("Enter messages (type 'quit' to exit):");
+        
+        String line;
+        while ((line = consoleReader.readLine()) != null) {
+            serverWriter.println(line);
             
-            SSLClient client = new SSLClient(host, port, testMode);
-            client.connect();
+            if (line.equalsIgnoreCase("quit")) {
+                break;
+            }
             
-            // Send a test message
-            client.sendMessage("Hello SSL Server");
-            
-            // Receive response
-            String response = client.receiveResponse();
-            System.out.println("Server response: " + response);
-            
-            client.disconnect();
-            
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            String response = serverReader.readLine();
+            if (response != null) {
+                System.out.println(response);
+            }
         }
+        
+        client.disconnect();
+        
+    } catch (Exception e) {
+        System.err.println("Error: " + e.getMessage());
+        e.printStackTrace();
     }
+}
+
 }
