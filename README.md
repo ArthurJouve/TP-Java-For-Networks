@@ -474,48 +474,27 @@ This time, we are going to implement the SSL Server. Using what was previously d
 
 Here is the full protocol following your hybrid design:
 Fixed‑size binary header + JSON body + length‑prefixed framing
+
+
 +-------------------+--------------------------+
+
 |  Header (12 bytes)|  Body JSON (variable)    |
+
 +-------------------+--------------------------+
+
 Message Header Format (12 bytes)
 
+The message header is a fixed-size binary structure of 12 bytes. It contains the following fields, in order:
 
+version (1 byte, uint8)Indicates the protocol version used. For example, the value may be set to 1.
 
-Field
-Size
-Type
-Description
+type (1 byte, uint8)Identifies the type of the message. This corresponds to an enumeration defining actions such as login, logout, room messages, etc.
 
+flags (2 bytes, uint16)Optional flags used to indicate additional information about the message, such as compression, priority, or other protocol options.
 
+body_length (4 bytes, uint32)Specifies the size of the JSON body in bytes. This field allows the receiver to know exactly how many bytes must be read after the header.
 
-version
-1 byte
-uint8
-Protocol version (e.g., 1)
-
-
-type
-1 byte
-uint8
-Message type (enum)
-
-
-flags
-2 bytes
-uint16
-Options (compression, priority…)
-
-
-body_length
-4 bytes
-uint32
-Length of the JSON body
-
-
-reserved
-4 bytes
-uint32
-Padding / future extension
+reserved (4 bytes, uint32)A field reserved for future extensions. It may be used for alignment or for adding new metadata later without breaking compatibility.
 
 
 
