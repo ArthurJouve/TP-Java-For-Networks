@@ -422,3 +422,32 @@ On Server side :
 <img width="356" height="185" alt="Capture d’écran 2025-12-03 à 14 07 02" src="https://github.com/user-attachments/assets/b15ef8c7-4bc2-4b28-97af-7552470efdce" />
 
 If we try to see the response time, even with lot of clients connected, the server replies the echo within milliseconds. 
+
+
+
+Session 5
+Secure Communication & Protocol Design
+
+Session Objective
+Design and implement secure network communication using SSL/TLS and create custom applicationlayer protocols, building upon socket programming fundamentals to develop production-ready
+network applications.
+
+2 Practical Exercises
+2.1 Exercise 1: Setting Up SSL/TLS Environment
+
+2.1.2 Task 1.2: Understand Certificate Contents
+
+<img width="1263" height="1111" alt="image" src="https://github.com/user-attachments/assets/f1de63ef-1a75-4401-aa12-b6ba7b722039" />
+
+Analysis Questions:
+1. What is the certificate’s owner name?
+The Owner certificat is : CN=localhost, OU=Development, O=MyCompany, L=City, ST=State, C=FR
+2. Who issued this certificate?
+The issuer is the owner here: CN=localhost, OU=Development, O=MyCompany, L=City, ST=State, C=FR
+3. What encryption algorithm was used?
+Two algorithms are implemented: 
+-Subject Public Key Algorithm: 2048-bit RSA key
+-Signature algorithm name: SHA384withRSA
+4. When does the certificate expire?
+Valid from: Wed Dec 03 13:51:05 CET 2025 until: Thu Dec 03 13:51:05 CET 2026
+
