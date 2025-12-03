@@ -1,6 +1,6 @@
 # TP-Java-For-Networks
 **Authors:** Arthur Jouve & Ewan Zahra Thenault  
-**Course:** 3RTS – Java for Networks (TP #1)  
+**Course:** 3RTS – Java for Networks
 **Project:** UDP/TCP Chat Application with Java Sockets
 
 ## Table of Contents
