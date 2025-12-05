@@ -506,16 +506,6 @@ As the client can't locate the certificate, the server reject the certificate :
 
 <img width="445" height="31" alt="Capture d’écran 2025-12-03 à 16 16 17" src="https://github.com/user-attachments/assets/c9771b45-eb63-419b-8c93-2f14f921d91a" />
 
- ##Exercise 4: Chat Protocol Specification
- 
-Binary Header (8 bytes)
-Byte 0-1: Protocol Version (uint16, big-endian)
-Byte 2-3: Message Type (uint16, big-endian)
-Byte 4-7: Message ID (uint32, big-endian)
-
-Body Length (4 bytes)
-Byte 8-11: Body Length in bytes (uint32, big-endian)
-
 ## Exercise 5: Protocol Message Design
 
 
