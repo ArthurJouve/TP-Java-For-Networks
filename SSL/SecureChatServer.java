@@ -17,6 +17,7 @@ public class SecureChatServer {
     private SSLServerSocket serverSocket;
     private Map<String, ClientSession> activeSessions;
     private Map<String, ChatRoom> chatRooms;
+    private ChatProtocolServer protocolHandler;
     private int port;
     private String keystorePath;
     private String keystorePassword;
@@ -35,6 +36,7 @@ public class SecureChatServer {
         this.keystorePassword = keystorePassword;
         this.activeSessions = new ConcurrentHashMap<>();
         this.chatRooms = new ConcurrentHashMap<>();
+        this.protocolHandler = new ChatProtocolServer();
         this.isRunning = false;
     }
     
@@ -49,7 +51,10 @@ public class SecureChatServer {
         serverSocket = (SSLServerSocket) factory.createServerSocket(port);
         isRunning = true;
         
-        System.out.println("Secure Chat Server started on port " + port);
+        System.out.println("=== Secure Chat Server ===");
+        System.out.println("Port: " + port);
+        System.out.println("SSL/TLS: Enabled");
+        System.out.println("Waiting for connections...\n");
         
         while (isRunning) {
             try {
@@ -57,7 +62,7 @@ public class SecureChatServer {
                 new Thread(() -> handleClient(clientSocket)).start();
             } catch (IOException e) {
                 if (isRunning) {
-                    System.err.println("Error accepting connection: " + e.getMessage());
+                    System.err.println("[ERROR] Connection error: " + e.getMessage());
                 }
             }
         }
@@ -93,53 +98,75 @@ public class SecureChatServer {
      * @param socket the SSL socket for the client
      */
     private void handleClient(SSLSocket socket) {
+        DataInputStream input = null;
+        DataOutputStream output = null;
+        String sessionId = null;
+        
         try {
             socket.startHandshake();
             System.out.println("[CONNECTION] Client from " + socket.getInetAddress());
             
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-            
-            String sessionId = null;
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(socket.getOutputStream());
             
             while (isRunning) {
-                // Read message length from header
-                byte version = input.readByte();
-                byte typeCode = input.readByte();
-                int bodyLength = input.readInt();
-                int timestamp = input.readInt();
-                
-                // Read full message
-                byte[] bodyBytes = new byte[bodyLength];
-                input.readFully(bodyBytes);
-                
-                // Reconstruct full message
-                byte[] fullMessage = new byte[10 + bodyLength];
-                fullMessage[0] = version;
-                fullMessage[1] = typeCode;
-                System.arraycopy(intToBytes(bodyLength), 0, fullMessage, 2, 4);
-                System.arraycopy(intToBytes(timestamp), 0, fullMessage, 6, 4);
-                System.arraycopy(bodyBytes, 0, fullMessage, 10, bodyLength);
-                
-                // Process message
-                sessionId = handleProtocolMessage(socket, fullMessage, output, sessionId);
+                try {
+                    // Read message header (10 bytes)
+                    byte version = input.readByte();
+                    byte typeCode = input.readByte();
+                    int bodyLength = input.readInt();
+                    int timestamp = input.readInt();
+                    
+                    // Validate body length
+                    if (bodyLength < 0 || bodyLength > 10000) {
+                        System.err.println("[ERROR] Invalid body length: " + bodyLength);
+                        continue;
+                    }
+                    
+                    // Read full message body
+                    byte[] bodyBytes = new byte[bodyLength];
+                    input.readFully(bodyBytes);
+                    
+                    // Reconstruct full message
+                    byte[] fullMessage = new byte[10 + bodyLength];
+                    fullMessage[0] = version;
+                    fullMessage[1] = typeCode;
+                    System.arraycopy(intToBytes(bodyLength), 0, fullMessage, 2, 4);
+                    System.arraycopy(intToBytes(timestamp), 0, fullMessage, 6, 4);
+                    System.arraycopy(bodyBytes, 0, fullMessage, 10, bodyLength);
+                    
+                    // Process message through protocol handler
+                    sessionId = handleProtocolMessage(socket, fullMessage, output, sessionId);
+                    
+                } catch (EOFException e) {
+                    System.out.println("[DISCONNECTION] Client closed connection");
+                    break;
+                }
             }
             
-        } catch (EOFException e) {
-            System.out.println("[DISCONNECTION] Client disconnected");
         } catch (Exception e) {
-            System.err.println("[ERROR] Client error: " + e.getMessage());
+            System.err.println("[ERROR] Client handler error: " + e.getMessage());
+            e.printStackTrace();
         } finally {
+            // Cleanup session
+            if (sessionId != null) {
+                protocolHandler.removeSession(sessionId);
+            }
+            
+            // Close resources
             try {
-                socket.close();
+                if (input != null) input.close();
+                if (output != null) output.close();
+                if (socket != null) socket.close();
             } catch (IOException e) {
-                System.err.println("Error closing socket: " + e.getMessage());
+                System.err.println("[ERROR] Closing resources: " + e.getMessage());
             }
         }
     }
     
     /**
      * Processes a protocol message based on its type.
+     * Delegates to ChatProtocolServer for protocol handling.
      * 
      * @param socket the client socket
      * @param messageData the raw message bytes
@@ -149,176 +176,14 @@ public class SecureChatServer {
      */
     public String handleProtocolMessage(SSLSocket socket, byte[] messageData, 
                                        DataOutputStream output, String currentSessionId) {
-        try {
-            ChatMessage message = ChatMessage.deserialize(messageData);
-            
-            System.out.println("[RECEIVED] Type: " + message.getMessageType() + 
-                             ", Sender: " + message.getSender());
-            
-            switch (message.getMessageType()) {
-                case LOGIN_REQUEST:
-                    return processLogin(message, output);
-                    
-                case JOIN_ROOM_REQUEST:
-                    processJoinRoom(message, currentSessionId);
-                    break;
-                    
-                case TEXT_MESSAGE:
-                    broadcastToRoom(message);
-                    break;
-                    
-                case PRIVATE_MESSAGE:
-                    sendPrivateMessage(message);
-                    break;
-                    
-                case USER_LIST_REQUEST:
-                    sendUserList(output, currentSessionId);
-                    break;
-                    
-                default:
-                    sendError(output, "Unknown message type");
-            }
-            
-            return currentSessionId;
-            
-        } catch (Exception e) {
-            System.err.println("[ERROR] Processing message: " + e.getMessage());
-            try {
-                sendError(output, "Invalid message format");
-            } catch (IOException ex) {
-                System.err.println("Error sending error response: " + ex.getMessage());
-            }
-            return currentSessionId;
-        }
+        return protocolHandler.handleMessage(messageData, output, currentSessionId);
     }
     
     /**
-     * Processes a login request.
+     * Converts int to byte array (big-endian).
      * 
-     * @param message the login request message
-     * @param output output stream for response
-     * @return session ID if login successful, null otherwise
-     * @throws IOException if sending response fails
-     */
-    private String processLogin(ChatMessage message, DataOutputStream output) throws IOException {
-        String username = message.getSender();
-        String sessionId = UUID.randomUUID().toString();
-        
-        // Create session
-        ClientSession session = new ClientSession(username, sessionId);
-        activeSessions.put(sessionId, session);
-        
-        System.out.println("[LOGIN] User: " + username + ", Session: " + sessionId);
-        
-        // Send success response
-        ChatMessage response = new ChatMessage(MessageType.LOGIN_RESPONSE, "server", "Login successful");
-        byte[] responseData = response.serialize();
-        output.write(responseData);
-        output.flush();
-        
-        return sessionId;
-    }
-    
-    /**
-     * Processes a join room request.
-     * 
-     * @param message the join room message
-     * @param sessionId the session ID of the user
-     */
-    private void processJoinRoom(ChatMessage message, String sessionId) {
-        if (sessionId == null) {
-            System.err.println("[ERROR] Join room without login");
-            return;
-        }
-        
-        String roomId = message.getContent(); // Room name in content
-        ClientSession session = activeSessions.get(sessionId);
-        
-        if (session != null) {
-            ChatRoom room = chatRooms.computeIfAbsent(roomId, k -> new ChatRoom(roomId));
-            room.addMember(session);
-            session.setCurrentRoom(roomId);
-            
-            System.out.println("[JOIN_ROOM] User: " + session.getUsername() + " joined " + roomId);
-        }
-    }
-    
-    /**
-     * Broadcasts a message to all members of a room.
-     * 
-     * @param message the message to broadcast
-     */
-    private void broadcastToRoom(ChatMessage message) {
-        String roomId = message.getContent(); // Assuming room info is in content
-        ChatRoom room = chatRooms.get(roomId);
-        
-        if (room != null) {
-            System.out.println("[BROADCAST] Room: " + roomId + ", From: " + message.getSender());
-            
-            for (ClientSession member : room.getMembers()) {
-                try {
-                    // In a full implementation, send to each member's socket
-                    System.out.println("  -> Sending to: " + member.getUsername());
-                } catch (Exception e) {
-                    System.err.println("Error broadcasting to " + member.getUsername());
-                }
-            }
-        }
-    }
-    
-    /**
-     * Sends a private message to a specific user.
-     * 
-     * @param message the private message
-     */
-    private void sendPrivateMessage(ChatMessage message) {
-        String recipient = message.getContent(); // Recipient in content
-        System.out.println("[PRIVATE] From: " + message.getSender() + " to: " + recipient);
-        
-        // Find recipient session and send message
-        for (ClientSession session : activeSessions.values()) {
-            if (session.getUsername().equals(recipient)) {
-                System.out.println("  -> Message delivered to " + recipient);
-                return;
-            }
-        }
-        
-        System.err.println("[ERROR] Recipient not found: " + recipient);
-    }
-    
-    /**
-     * Sends the list of active users.
-     * 
-     * @param output output stream
-     * @param sessionId requesting session ID
-     * @throws IOException if sending fails
-     */
-    private void sendUserList(DataOutputStream output, String sessionId) throws IOException {
-        StringBuilder userList = new StringBuilder();
-        for (ClientSession session : activeSessions.values()) {
-            userList.append(session.getUsername()).append(",");
-        }
-        
-        ChatMessage response = new ChatMessage(MessageType.USER_LIST_RESPONSE, "server", userList.toString());
-        output.write(response.serialize());
-        output.flush();
-    }
-    
-    /**
-     * Sends an error response.
-     * 
-     * @param output output stream
-     * @param errorMessage the error message
-     * @throws IOException if sending fails
-     */
-    private void sendError(DataOutputStream output, String errorMessage) throws IOException {
-        ChatMessage error = new ChatMessage(MessageType.ERROR_RESPONSE, "server", errorMessage);
-        output.write(error.serialize());
-        output.flush();
-    }
-    
-    /**
-     * Converts int to byte array.
+     * @param value integer to convert
+     * @return 4-byte array
      */
     private byte[] intToBytes(int value) {
         return new byte[] {
@@ -330,21 +195,51 @@ public class SecureChatServer {
     }
     
     /**
+     * Shuts down the server gracefully.
+     */
+    public void shutdown() {
+        isRunning = false;
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+                System.out.println("\n[SHUTDOWN] Server stopped");
+            }
+        } catch (IOException e) {
+            System.err.println("[ERROR] Shutdown: " + e.getMessage());
+        }
+    }
+    
+    /**
      * Main method to start the server.
+     * 
+     * @param args [port] [keystorePath] [keystorePassword]
      */
     public static void main(String[] args) {
         if (args.length < 3) {
-            System.err.println("Usage: java SecureChatServer <port> <keystorePath> <password>");
+            System.err.println("Usage: java SSL.SecureChatServer <port> <keystorePath> <password>");
+            System.err.println("Example: java SSL.SecureChatServer 8443 server.jks password123");
             System.exit(1);
         }
         
         try {
             int port = Integer.parseInt(args[0]);
             SecureChatServer server = new SecureChatServer(port, args[1], args[2]);
+            
+            // Add shutdown hook for graceful termination
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("\nShutdown signal received...");
+                server.shutdown();
+            }));
+            
             server.launch();
+            
+        } catch (NumberFormatException e) {
+            System.err.println("Error: Invalid port number");
+            System.exit(1);
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Fatal error: " + e.getMessage());
             e.printStackTrace();
+            System.exit(1);
         }
     }
 }
@@ -357,6 +252,12 @@ class ClientSession {
     private String sessionId;
     private String currentRoom;
     
+    /**
+     * Constructs a ClientSession.
+     * 
+     * @param username the username
+     * @param sessionId the session ID
+     */
     public ClientSession(String username, String sessionId) {
         this.username = username;
         this.sessionId = sessionId;
@@ -375,16 +276,53 @@ class ChatRoom {
     private String roomId;
     private List<ClientSession> members;
     
+    /**
+     * Constructs a ChatRoom.
+     * 
+     * @param roomId the room identifier
+     */
     public ChatRoom(String roomId) {
         this.roomId = roomId;
         this.members = new ArrayList<>();
     }
     
+    /**
+     * Adds a member to the room.
+     * 
+     * @param session the client session to add
+     */
     public void addMember(ClientSession session) {
-        members.add(session);
+        if (!members.contains(session)) {
+            members.add(session);
+        }
     }
     
+    /**
+     * Removes a member from the room.
+     * 
+     * @param session the client session to remove
+     */
+    public void removeMember(ClientSession session) {
+        members.remove(session);
+    }
+    
+    /**
+     * Gets all members of the room.
+     * 
+     * @return copy of members list
+     */
     public List<ClientSession> getMembers() {
         return new ArrayList<>(members);
     }
+    
+    /**
+     * Gets the number of members in the room.
+     * 
+     * @return member count
+     */
+    public int getMemberCount() {
+        return members.size();
+    }
+    
+    public String getRoomId() { return roomId; }
 }
