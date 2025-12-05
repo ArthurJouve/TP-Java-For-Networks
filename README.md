@@ -539,7 +539,13 @@ Everything is gathered in the ChatMessage class.
 
 ## Exercise 6: Protocol Server Implementation
 
+We can see that when a user connects itself to the server, it has to join (/join) a room to be able to speak with other personnes present in the same room.
+The other users (outside of the room) don't receive messages.
 
+<img width="1025" height="517" alt="Capture d’écran 2025-12-05 à 14 28 31" src="https://github.com/user-attachments/assets/9782182e-c1d2-48f5-8e83-9d36428bcd50" />
+
+On the screen up above, the user Arthur joins the room4. When he speaks no one receives any message as long as he is alone in the room.
+When Ewan joins room4, he starts receiving messages. From now on, users can speak one an other.
 
 
 ## Exercise 8: Protocol Compliance Testing
@@ -547,10 +553,9 @@ Everything is gathered in the ChatMessage class.
 As you can see on the following picture,
 Serialisation/deserialisation works properly.
 Special caracters are well dealt with.
-
 <img width="1221" height="333" alt="image" src="https://github.com/user-attachments/assets/bb594b13-cd1a-4c3d-8864-f4d329ce8b69" />
+
 Long messages don't matter:
 <img width="1385" height="1020" alt="image" src="https://github.com/user-attachments/assets/1c256cbb-5447-4adb-b6ab-c088e618d1ec" />
 
-<img width="1025" height="517" alt="Capture d’écran 2025-12-05 à 14 28 31" src="https://github.com/user-attachments/assets/9782182e-c1d2-48f5-8e83-9d36428bcd50" />
 
