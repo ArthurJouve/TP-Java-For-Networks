@@ -541,12 +541,12 @@ Everything is gathered in the ChatMessage class.
 
 Here follows on the screenshot three shells, on the left, there is the server, in the midle there is user1 (Arthur) and on the right, there is user2 (Ewan).
 We can see that when a user connects itself to the server, it has to join (/join) a room to be able to speak with other personnes present in the same room.
-The other users (outside of the room) don't receive messages.
+The other users (outside of the room) don't receive these messages.
 
 <img width="1025" height="517" alt="Capture d’écran 2025-12-05 à 14 28 31" src="https://github.com/user-attachments/assets/9782182e-c1d2-48f5-8e83-9d36428bcd50" />
 
 On the screenshot up above, the user Arthur joins the room4. When he speaks no one receives any message as long as he is alone in the room.
-When Ewan joins room4, he starts receiving messages. From now on, users can speak one an other.
+When Ewan joins room4, he starts receiving messages. From now on, users can speak to one an other.
 
 
 ## Exercise 8: Protocol Compliance Testing
