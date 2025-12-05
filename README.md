@@ -542,4 +542,11 @@ Everything is gathered in the ChatMessage class.
 
 
 
+## Exercise 8: Protocol Compliance Testing
+
+As you can see on the following picture, special caracters are well dealt with:
+
+<img width="1221" height="333" alt="image" src="https://github.com/user-attachments/assets/bb594b13-cd1a-4c3d-8864-f4d329ce8b69" />
+
+
 
