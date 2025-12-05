@@ -539,6 +539,22 @@ Everything is gathered in the ChatMessage class.
 
 ## Exercise 6: Protocol Server Implementation
 
+Now let's implement this functionnalities with what we discussed before :
+
+- Authentication and User login
+- Unique session ID (UUID)
+- Chat Rooms
+- Join room (/join command)
+- Auto-creation of rooms with the name entered by the user
+- Broadcast messages only to room members
+- System notifications (user joined/left)
+- Group messages (in room)
+- Private messages (/msg command)
+- User list (/users command)
+
+The code is written in the ChatProtocolServer file for the client and the SecureChatServer for the server. 
+
+
 Here follows on the screenshot three shells, on the left, there is the server, in the midle there is user1 (Arthur) and on the right, there is user2 (Ewan).
 We can see that when a user connects itself to the server, it has to join (/join) a room to be able to speak with other personnes present in the same room.
 The other users (outside of the room) don't receive these messages.
