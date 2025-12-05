@@ -544,9 +544,12 @@ Everything is gathered in the ChatMessage class.
 
 ## Exercise 8: Protocol Compliance Testing
 
-As you can see on the following picture, special caracters are well dealt with:
+As you can see on the following picture,
+Serialisation/deserialisation works properly.
+Special caracters are well dealt with.
 
 <img width="1221" height="333" alt="image" src="https://github.com/user-attachments/assets/bb594b13-cd1a-4c3d-8864-f4d329ce8b69" />
-
+Long messages don't matter:
+<img width="1385" height="1020" alt="image" src="https://github.com/user-attachments/assets/1c256cbb-5447-4adb-b6ab-c088e618d1ec" />
 
 
