@@ -552,4 +552,5 @@ Special caracters are well dealt with.
 Long messages don't matter:
 <img width="1385" height="1020" alt="image" src="https://github.com/user-attachments/assets/1c256cbb-5447-4adb-b6ab-c088e618d1ec" />
 
+<img width="1025" height="517" alt="Capture d’écran 2025-12-05 à 14 28 31" src="https://github.com/user-attachments/assets/9782182e-c1d2-48f5-8e83-9d36428bcd50" />
 
