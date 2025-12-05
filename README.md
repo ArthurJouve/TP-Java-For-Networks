@@ -556,8 +556,9 @@ Serialisation/deserialisation works properly.
 Special caracters are well dealt with.
 <img width="1221" height="333" alt="image" src="https://github.com/user-attachments/assets/bb594b13-cd1a-4c3d-8864-f4d329ce8b69" />
 
+
 Long messages can't be send to the server :
 
 <img width="369" height="177" alt="Capture d’écran 2025-12-05 à 15 05 57" src="https://github.com/user-attachments/assets/d18f2f2e-cc97-4319-a3e6-da91714e6a7b" />
-
+We tried to send 1000 "A", the server doesn't accepts the message.
 
