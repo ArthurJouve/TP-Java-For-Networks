@@ -548,6 +548,74 @@ The other users (outside of the room) don't receive these messages.
 On the screenshot up above, the user Arthur joins the room4. When he speaks no one receives any message as long as he is alone in the room.
 When Ewan joins room4, he starts receiving messages. From now on, users can speak to one an other.
 
+## Exercise 7: Security Testing 
+# 4.1.1 SSL/TLS Configuration Testing
+
+1. Test with any TLS version (1.2 or 1.3)
+
+We have use TLS version 1.3 and it is working. Now let’s try to use TLS version 1.2. 
+
+We launched the server normally and then connect to the client using openssl command : 
+
+```
+openssl s_client -connect localhost:8443 -tls1_2
+```
+
+<img width="601" height="319" alt="Capture d’écran 2025-12-05 à 15 12 49" src="https://github.com/user-attachments/assets/4c18449c-6425-438f-929c-09246615a2ac" />
+
+The server replies to us its certificate and we can see that it support TLSv1.2 (here we cannot send messages because the client does not support the message format. 
+
+
+2. Verify certificate validation works correctly
+
+When we have connect to the server, we have seen that the following fields where replied by the server : notBefore=Dec  3 13:30:46 2025 GMT / notAfter=Dec  3 13:30:46 2026 GMT
+
+It means that our certificate works correctly and is the one we’ve created on the 3 of December 2025.
+
+
+3. Test connection with invalid certificates
+
+Now if we generate a certificate with a validity period that has expired (start date = « -2d ») and we connect to the server using this certificate, we cannot connect to it has it return to us the error code 10 (certificate has expired).
+
+<img width="394" height="169" alt="Capture d’écran 2025-12-05 à 15 13 34" src="https://github.com/user-attachments/assets/9a3d6fec-8d96-4c58-8b37-b2ae9109b472" />
+
+
+4. Measure handshake performance
+
+By using a light script with a for loop to create multiple openssl connections, we can compute the handshake time.
+
+Here with a large number of connections, we have roughly 30-40ms of latency to connect.
+
+
+<img width="211" height="235" alt="Capture d’écran 2025-12-05 à 15 14 10" src="https://github.com/user-attachments/assets/0b2fbb71-cc9f-4114-ad7b-4538d78a7785" />
+
+
+# 4.1.2 Protocol Security Testing
+
+1. Test message integrity (tamper detection)
+
+If we connect and type every different types of commands, there is no error on server side : 
+
+
+<img width="580" height="205" alt="Capture d’écran 2025-12-05 à 15 14 47" src="https://github.com/user-attachments/assets/04c6f8a9-b1c8-4706-bf45-e1d5b2d79c97" />
+
+
+2. Verify no sensitive data in plaintext
+
+For this one, we don’t know how we can verify this property. 
+
+
+3. Test for common vulnerabilities
+
+Our script is resistant to buffer overflow (see the test after). 
+
+If we try to send wrong commands, it doesn’t work too.
+
+4. Validate error handling doesn’t leak information
+
+Even if we try to connect multiple clients, sending errors and multiple connections at the same time, the server does not crash and does not leak informations to non concerned users. 
+
+
 
 ## Exercise 8: Protocol Compliance Testing
 
